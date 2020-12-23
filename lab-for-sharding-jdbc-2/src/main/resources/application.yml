@@ -1,0 +1,49 @@
+spring:
+  #  ShardingSphere 配置项
+  shardingsphere:
+    datasource:
+      #      所有数据源的名称 (配置读写分离)
+      names: ds-master,ds-slave-1,ds-slave-2
+      #      订单orders主库的数据源配置
+      ds-master:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-calss-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://118.24.70.22:3306/test_orders?useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: bieo5512
+        #      订单orders从库1的数据源配置
+      ds-slave-1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-calss-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://118.24.70.22:3306/test_orders_1?useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: bieo5512
+        #      订单orders从库2的数据源配置
+      ds-slave-2:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-calss-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://118.24.70.22:3306/test_orders_2?useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: bieo5512
+    #    读写分离配置，
+    masterslave:
+      name: ms # 名字，任意，需要保证唯一
+      master-data-source-name: ds-master # 主库数据源
+      slave-data-source-names: ds-slave-1,ds-slave-2 # 从库数据源
+    #    扩展属性配置
+    props:
+      sql:
+        #        打印sql
+        show: true
+
+# mybatis-plus 配置内容
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true # 下划线转驼峰d
+  global-config:
+    db-config:
+      id-type: none # Mybatis 也提供ID生成策略，但是我们要使用sharding-jdbc的
+      logic-not-delete-value: 0 # 逻辑未删除的值
+      logic-delete-value: 1 # 逻辑删除的值
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.smallyuan.labs.sharding2.dataobject

@@ -1,0 +1,50 @@
+spring:
+  #  ShardingSphere 配置项
+  shardingsphere:
+    datasource:
+      #      所有数据源的名称（配置分库分表）
+      names: ds-orders-0,ds-orders-1
+      ds-orders-0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-calss-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://118.24.70.22:3306/lab_orders_0?useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: bieo5512
+      ds-orders-1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-calss-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://118.24.70.22:3306/lab_orders_1?useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: bieo5512
+    #    分片规则
+    sharding:
+      tables:
+        #        orders表的配置
+        orders:
+          # 映射到 ds-orders-0 和 ds-orders-1 数据源的 orders 表们
+          actualDataNodes: ds-orders-0.orders_$->{[0,2,4,6]}, ds-orders-1.orders_$->{[1,3,5,7]}
+          #          主键生成策略
+          key-generator:
+            column: id
+            type: SNOWFLAKE
+          database-strategy:
+            inline:
+              algorithm-expression: ds-orders-$->{user_id % 2}
+              sharding-column: user_id
+          table-strategy:
+            inline:
+              algorithm-expression: orders_$->{user_id % 8}
+              sharding-column: user_id
+        #        order_config表的配置
+        order_config:
+          #          仅映射到ds-orders-0.order_config
+          actualDataNodes: ds-orders-0.order_config
+    #    扩展属性配置
+    props:
+      sql:
+        #        打印sql
+        show: true
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.smallyuan.labs.sharding.dataobject

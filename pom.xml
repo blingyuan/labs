@@ -22,7 +22,8 @@
 	<modules>
 		<module>lab-for-sharding-jdbc</module>
 		<module>lab-for-sharding-jdbc-2</module>
-	</modules>
+        <module>lab-for-elastic-job</module>
+    </modules>
 
 	<dependencies>
 		<dependency>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.smallyuan.labs.com.smallyuan.labs.sharding.mapper.OrderConfigMapper">
+<mapper namespace="com.smallyuan.labs.sharding.mapper.OrderConfigMapper">
 
     <sql id="FIELDS">
         id,pay_timeout

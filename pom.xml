@@ -23,6 +23,7 @@
 		<module>lab-for-sharding-jdbc</module>
 		<module>lab-for-sharding-jdbc-2</module>
         <module>lab-for-elastic-job</module>
+        <module>lab-for-canal</module>
     </modules>
 
 	<dependencies>

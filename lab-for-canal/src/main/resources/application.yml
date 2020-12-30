@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    driver-calss-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://139.155.15.157:3306/lab_canal?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: min-shua1./++

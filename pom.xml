@@ -25,6 +25,7 @@
         <module>lab-for-elastic-job</module>
         <module>lab-for-canal</module>
         <module>lab-for-spring-boot-starter</module>
+        <module>lab-for-mapstruct</module>
     </modules>
 
 	<dependencies>

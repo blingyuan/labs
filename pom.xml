@@ -26,6 +26,7 @@
         <module>lab-for-canal</module>
         <module>lab-for-spring-boot-starter</module>
         <module>lab-for-mapstruct</module>
+        <module>lab-for-elasticsearch</module>
     </modules>
 
 	<dependencies>

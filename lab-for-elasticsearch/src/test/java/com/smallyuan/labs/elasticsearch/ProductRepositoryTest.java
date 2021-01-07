@@ -2,6 +2,7 @@ package com.smallyuan.labs.elasticsearch;
 
 import com.smallyuan.labs.elasticsearch.dataobject.ESProductDO;
 import com.smallyuan.labs.elasticsearch.repository.ProductRepository;
+import org.elasticsearch.action.bulk.BulkRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -55,5 +56,9 @@ public class ProductRepositoryTest {
     public void testSelectByIds() {
         Iterable<ESProductDO>  users = productRepository.findAllById(Arrays.asList(1,4));
         users.forEach(System.out::println);
+    }
+
+    public void testBulk() {
+        BulkRequest request = new BulkRequest();
     }
 }

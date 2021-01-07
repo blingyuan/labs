@@ -1,0 +1,15 @@
+package com.smallyuan.labs.elasticsearch.repository;
+
+import com.smallyuan.labs.elasticsearch.dataobject.ESMovieDO;
+import org.springframework.data.elasticsearch.annotations.Query;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+
+import java.util.List;
+
+public interface MovieRepository extends ElasticsearchRepository<ESMovieDO,Integer> {
+
+    List<ESMovieDO> findByTitleLike(String title);
+
+    @Query("{\"query_string\": {\"query\": \"?\"}}")
+    List<ESMovieDO> findByQuery(String anything);
+}

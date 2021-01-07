@@ -12,4 +12,7 @@ public interface MovieRepository extends ElasticsearchRepository<ESMovieDO,Integ
 
     @Query("{\"query_string\": {\"query\": \"?0\"}}")
     List<ESMovieDO> findByQuery(String anything);
+
+    @Query("{\"query_string\": {\"default_field\": \"?0\",\"query\": \"?1\"}}")
+    List<ESMovieDO> findByQueryAndField(String filed,String anything);
 }

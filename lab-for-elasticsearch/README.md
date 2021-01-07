@@ -57,3 +57,67 @@ server.host: IP地址
 elasticsearch.hosts: ["http://118.24.70.22:9200"]
 ```
 
+### 基本使用
+
+[官方文档链接](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html)
+
+```
+# 插入/更新
+PUT /movie/_doc/5
+{
+    "title": "The Godfather",
+    "director": "Francis Ford Coppola",
+    "year": 1972,
+    "genres": ["Crime", "Drama"]
+}
+
+#删除
+DELETE /movie/_doc/5
+
+# 查询
+POST /_search
+{
+  "query": {
+    "query_string": {
+      "query": "Biography"
+    }
+  }
+}
+
+GET /_search
+{
+  "query": {
+    "query_string": {
+      "default_field": "title",
+      "query": "ford"
+    }
+  }
+}
+
+GET /_search
+{
+  "query": {
+    "query_string": {
+      "fields": ["title","director"],
+      "query": "ford"
+    }
+  }
+}
+
+GET /_search 
+{
+  "query": {
+    "bool": {
+      "must": {
+        "match": {
+          "genres": "drama"
+        }
+      },
+      "filter":
+        {
+          "term": {"year":1962}
+        }
+    }
+  }  
+}
+```

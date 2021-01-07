@@ -10,6 +10,6 @@ public interface MovieRepository extends ElasticsearchRepository<ESMovieDO,Integ
 
     List<ESMovieDO> findByTitleLike(String title);
 
-    @Query("{\"query_string\": {\"query\": \"?\"}}")
+    @Query("{\"query_string\": {\"query\": \"?0\"}}")
     List<ESMovieDO> findByQuery(String anything);
 }

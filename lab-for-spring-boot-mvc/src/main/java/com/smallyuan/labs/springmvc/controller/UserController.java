@@ -5,9 +5,8 @@ import com.smallyuan.labs.springmvc.exception.ServiceException;
 import com.smallyuan.labs.springmvc.vo.UserVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -58,5 +57,16 @@ public class UserController {
     public void exception03() {
         logger.info("[exception03]");
         throw new ServiceException(ServiceExceptionEnum.USER_NOT_FOUND);
+    }
+
+    // http://www.iocoder.cn/Spring-Boot/SpringMVC/ todo
+    @PostMapping(value = "/add",
+            // ↓ 增加 "application/xml"、"application/json" ，针对 Content-Type 请求头
+            consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
+            // ↓ 增加 "application/xml"、"application/json" ，针对 Accept 请求头
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+    )
+    public UserVo add(@RequestBody UserVo userVo) {
+        return userVo;
     }
 }

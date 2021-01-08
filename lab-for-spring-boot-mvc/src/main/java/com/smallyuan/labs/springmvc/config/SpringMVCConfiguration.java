@@ -6,6 +6,9 @@ import com.smallyuan.labs.springmvc.interceptor.ThirdInterceptor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -13,6 +16,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 public class SpringMVCConfiguration implements WebMvcConfigurer {
@@ -47,6 +51,7 @@ public class SpringMVCConfiguration implements WebMvcConfigurer {
     }
 
     /**
+     * [Spring 里那么多种 CORS 的配置方式，到底有什么区别](https://segmentfault.com/a/1190000019485883)
      * 用 CorsFilter 解决跨域问题
      *
      * @return
@@ -71,4 +76,13 @@ public class SpringMVCConfiguration implements WebMvcConfigurer {
         bean.setOrder(0); // 设置 order 排序。这个顺序很重要哦，为避免麻烦请设置在最前
         return bean;
     }
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        // 增加xml消息转换器
+        Jackson2ObjectMapperBuilder xmlBuilder = Jackson2ObjectMapperBuilder.xml();
+        xmlBuilder.indentOutput(true);
+        converters.add(new MappingJackson2XmlHttpMessageConverter(xmlBuilder.build()));
+    }
+
 }

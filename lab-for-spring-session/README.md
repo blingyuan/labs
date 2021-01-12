@@ -9,6 +9,49 @@
  - 可以使用Redis，JDBC（访问MySQL，Oracle等数据库），Hazelcast作为Session存储的数据源
  - Spring Session也另外提供了Spring Session MongoDB，实现使用MongoDB作为Session存储的数据源
  
+ - session 外部化存储：基于应用层封装`HttpServletRequest`请求对象,包装成自己的`RequestWrapper`对象，从而让实现调用`HttpServletRequest#getSession()`方法时，获取读写外部存储器的`SessionWrapper`对象
+ 例如：Spring Session
+```
+@Order(SessionRepositoryFilter.DEFAULT_ORDER)
+public class SessionRepositoryFilter<S extends Session> extends OncePerRequestFilter {
+// ...
+    @Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
+        // sessionRepository 是访问外部数据源的操作类（比如 redis，mysql等）
+		request.setAttribute(SESSION_REPOSITORY_ATTR, this.sessionRepository);
+        // 将请求和响应包装成自己的 Wrapper
+		SessionRepositoryRequestWrapper wrappedRequest = new SessionRepositoryRequestWrapper(request, response);
+		SessionRepositoryResponseWrapper wrappedResponse = new SessionRepositoryResponseWrapper(wrappedRequest,
+				response);
+        // 继续执行时 通过封装的请求，响应进行处理。
+		try {
+			filterChain.doFilter(wrappedRequest, wrappedResponse);
+		}
+		finally {
+			wrappedRequest.commitSession();
+		}
+	}
+// ...
+}
+```
+调用getSession时,返回的是自己封装的`HttpSessionWrapper`
+```
+org.springframework.session.web.http.SessionRepositoryFilter.SessionRepositoryRequestWrapper.getSession(boolean)
+```
+ 后续，我们调用 HttpSessionWrapper 的方法，例如说 `HttpSessionWrapper#setAttribute(String name, Object value)` 方法，访问的就是外部数据源，而不是内存中。
+ ```
+// 这里的S session 就是 sessionRepository 
+private final class HttpSessionWrapper extends HttpSessionAdapter<S> {
+// ...
+	HttpSessionWrapper(S session, ServletContext servletContext) {
+		super(session, servletContext);
+	}
+// ...
+}
+```
+ 
+ 
  ### Spring Session + Redis
  - 引入依赖
 ```

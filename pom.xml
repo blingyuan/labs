@@ -30,6 +30,7 @@
         <module>lab-for-spring-boot-mvc</module>
         <module>lab-for-spring-boot-webflux</module>
         <module>lab-for-spring-session</module>
+        <module>lab-for-validation</module>
     </modules>
 
 	<dependencies>

@@ -1,7 +1,5 @@
 package com.smallyuan.labs.validation.validator;
 
-import org.springframework.util.CollectionUtils;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
@@ -9,7 +7,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class InEnumValidator implements ConstraintValidator<InEunm,Integer> {
+public class InEnumValidator implements ConstraintValidator<InEnum,Integer> {
 
     /**
      * 枚举的值数组
@@ -31,7 +29,7 @@ public class InEnumValidator implements ConstraintValidator<InEunm,Integer> {
     }
 
     @Override
-    public void initialize(InEunm constraintAnnotation) {
+    public void initialize(InEnum constraintAnnotation) {
         IntArrayValuable[] values = constraintAnnotation.value().getEnumConstants();
         if (values.length == 0) {
             this.values = Collections.emptySet();

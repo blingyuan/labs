@@ -1,8 +1,10 @@
 package com.smallyuan.labs.validation.validator;
 
 import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.*;
@@ -13,7 +15,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = InEnumValidator.class)
-public @interface InEunm {
+public @interface InEnum {
 
     /**
      * @return 实现 IntArrayValuable 接口的
@@ -24,5 +26,27 @@ public @interface InEunm {
      * 提示内容
      * @return
      */
-    String meaasge() default "必须在指定范围 {value}";
+    String message() default "必须在指定范围 {value}";
+
+    /**
+     * @return 分组
+     */
+    Class<?>[] groups() default {};
+
+    /**
+     * @return Payload 数组
+     */
+    Class<? extends Payload>[] payload() default {};
+
+    /**
+     *  Defines several {@code @InEnum} constraints on the same element.
+     */
+    @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    @interface List {
+
+        InEnum[] value();
+
+    }
 }

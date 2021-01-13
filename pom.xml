@@ -31,7 +31,8 @@
         <module>lab-for-spring-boot-webflux</module>
         <module>lab-for-spring-session</module>
         <module>lab-for-validation</module>
-    </modules>
+		<module>lab-for-dubbo-xml-demo</module>
+	</modules>
 
 	<dependencies>
 		<dependency>

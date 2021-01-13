@@ -1,5 +1,11 @@
 spring:
 #  org.springframework.boot.autoconfigure.context.MessageSourceProperties
   messages:
-    basename: i18n/messages
+    basename: il8n/messages
     encoding: UTF-8
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: conditions

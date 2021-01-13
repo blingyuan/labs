@@ -5,8 +5,9 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
-public class UserAddDTO {
+public class UserAddDTO implements Serializable {
 
     /**
      * 昵称

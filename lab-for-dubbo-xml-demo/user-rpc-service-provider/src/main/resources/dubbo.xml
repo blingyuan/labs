@@ -8,7 +8,8 @@
        http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
 
     <!-- 服务提供者暴露服务配置 -->
+    <!-- 去掉服务提供者的 UserRpcService 的 ExceptionFilter 过滤器。-->
     <dubbo:service ref="userRpcServiceImpl" interface="com.smallyuan.labs.dubbo.api.UserRpcService"
-                   version="${dubbo.provider.UserRpcService.version}" validation="true" />
+                   version="${dubbo.provider.UserRpcService.version}" validation="true" filter="-exception"/>
 
 </beans>

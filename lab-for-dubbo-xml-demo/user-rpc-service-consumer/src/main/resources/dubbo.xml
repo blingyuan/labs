@@ -8,6 +8,7 @@
        http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
 
     <!-- 服务消费者引用服务配置 -->
-    <dubbo:reference id="userService" interface="com.smallyuan.labs.dubbo.api.UserRpcService" version="${dubbo.consumer.UserRpcService.version}" />
+    <dubbo:reference id="userService" interface="com.smallyuan.labs.dubbo.api.UserRpcService"
+                     version="${dubbo.consumer.UserRpcService.version}" validation="true"  />
 
 </beans>

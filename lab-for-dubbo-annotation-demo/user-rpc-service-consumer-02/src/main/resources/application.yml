@@ -1,0 +1,12 @@
+#  org.apache.dubbo.spring.boot.autoconfigure.DubboConfigurationProperties
+dubbo:
+  application:
+    name: user-service-consumer
+  #    注册中心
+  registry:
+    address: zookeeper://127.0.0.1:2181
+  #    Dubbo 消费者配置
+  consumer:
+    timeout: 1000 # 【重要】远程服务调用超时时间，单位：毫秒。默认为 1000 毫秒
+    UserRpcService:
+      version: 1.0.2

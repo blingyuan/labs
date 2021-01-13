@@ -32,7 +32,8 @@
         <module>lab-for-spring-session</module>
         <module>lab-for-validation</module>
 		<module>lab-for-dubbo-xml-demo</module>
-	</modules>
+        <module>lab-for-dubbo-annotation-demo</module>
+    </modules>
 
 	<dependencies>
 		<dependency>

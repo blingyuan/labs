@@ -1,0 +1,17 @@
+#  org.apache.dubbo.spring.boot.autoconfigure.DubboConfigurationProperties
+dubbo:
+  application:
+    name: user-service-provider
+  #    注册中心
+  registry:
+    address: zookeeper://127.0.0.1:2181
+  #    服务提供者协议
+  protocol:
+    port: -1 # -1表示随机端口
+    name: dubbo
+  provider:
+    timeout: 1000 # 远程服务调用超时时间
+    UserRpcService:
+      version: 1.0.2
+  scan:
+    base-packages: com.smallyuan.labs.dubbo02.service

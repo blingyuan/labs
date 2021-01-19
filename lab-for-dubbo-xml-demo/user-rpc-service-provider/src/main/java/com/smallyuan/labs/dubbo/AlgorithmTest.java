@@ -5,8 +5,10 @@ import java.util.*;
 public class AlgorithmTest {
     public static void main(String[] args) {
         Solution solution = new Solution();
-//        [-4,-1,-1,0,1,2]
-        solution.threeSum(new int[]{-1,0,1,2,-1,-4});
+//        [0,0,0,0] 0
+//        [-2,-1,-1,1,1,2,2],0
+//        [1,-2,-5,-4,-3,3,3,5], -11
+        solution.fourSum(new int[]{1,-2,-5,-4,-3,3,3,5},-11);
     }
 
     static class Solution {
@@ -152,7 +154,7 @@ public class AlgorithmTest {
         }
 
         // 15. 三数之和
-        // 双指针法 固定指针 i 和两个移动指针 left + right， 保证 num[i] < num[left] < num[right]，两个指针往里走
+        // 数组排序后用双指针法 固定指针 i 和两个移动指针 left + right， 保证 num[i] < num[left] < num[right]，两个指针往里走
         // [0, 0, 0, 0, 0, ..., 0, 0, 0] 最极端的情况
         public List<List<Integer>> threeSum(int[] nums) {
             if (nums.length < 3) {
@@ -189,9 +191,59 @@ public class AlgorithmTest {
         }
 
         // 18. 四数之和
+        // 与三数之和类似。数组排序后用双指针法。 两层循环确定固定指针 i+j，两个移动指针 left+right，保证num[i]<num[j]<num[left]+num[right]
         public List<List<Integer>> fourSum(int[] nums, int target) {
-            return null;
+            if (nums == null || nums.length < 4) {
+                return Collections.EMPTY_LIST;
+            }
+            Arrays.sort(nums);
+            List<List<Integer>> result = new ArrayList<>();
+            int length = nums.length;
+            for (int i = 0; i < length - 3; i++) {
+//                if (nums[i] > target) return result; 因为target可以为负数，所以不能这样进行支剪
+                if (i > 0 && nums[i-1] == nums[i]) {
+                    continue;
+                }
+                if (nums[i] + nums[i+1] + nums[i+2] + nums[i+3] > target) {
+                    break;
+                }
+                if (nums[i] + nums[length-1] + nums[length-2] + nums[length-3] < target) {
+                    continue;
+                }
+                for (int j = i + 1; j < length - 2; j++) {
+                    if (j > i + 1 && nums[j] == nums[j-1]) {
+                        continue;
+                    }
+                    if (nums[i] + nums[j+1] + nums[j+2] + nums[j] > target) {
+                        break;
+                    }
+                    if (nums[i] + nums[length-1] + nums[length-2] + nums[j] < target) {
+                        continue;
+                    }
+                    int left = j + 1;
+                    int right = length - 1;
+                    System.out.println("i:"+i+"j:"+j+"left:"+left+", right:"+right);
+                    while (left < right) {
+                        int sum = nums[i]+nums[j]+nums[left]+nums[right];
+                        System.out.printf("num[%d] + nums[%d] + nums[%d] + nums[%d] = %d + %d + %d + %d = %d\n",i,j,left,right,nums[i],nums[j],nums[left],nums[right],sum);
+                        if (sum == target) {
+                            result.add(Arrays.asList(nums[i],nums[j],nums[left],nums[right]));
+                            while (left < right && nums[left+1] == nums[left]) left++;
+                            while (left < right && nums[right-1] == nums[right]) right--;
+                            left++;
+                            right--;
+                        } else if (sum < target) {
+                            left++;
+                        } else {
+                            right--;
+                        }
+                        System.out.println("i:"+i+"j:"+j+"left:"+left+", right:"+right);
+                    }
+                }
+            }
+            return result;
         }
+
     }
 
 }

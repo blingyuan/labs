@@ -33,6 +33,7 @@
         <module>lab-for-validation</module>
 		<module>lab-for-dubbo-xml-demo</module>
         <module>lab-for-dubbo-annotation-demo</module>
+        <module>lab-for-leetcode</module>
     </modules>
 
 	<dependencies>

@@ -4,6 +4,11 @@ package com.smallyuan.labs.leetcode.string;
  * 获取前后缀数组
  */
 public class KMP {
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        System.out.println(solution.strStr("hello","ll"));
+    }
     /**
      * 求next数组（最长相等前后缀数组）
      * 1. 初始化
@@ -30,8 +35,30 @@ public class KMP {
         }
     }
 
-//    28. 实现 strStr()
-    public int strStr(String haystack, String needle) {
-        return 0;
+    static class Solution {
+        //    28. 实现 strStr()
+        // 解法1，暴力
+        public int strStr(String haystack, String needle) {
+            int n = haystack.length();
+            int l = needle.length();
+            int i = 0,j = 0;
+            while (i <= n - l) {
+                while (i <= n - l && haystack.charAt(i) != needle.charAt(0)) i++;
+                while (haystack.charAt(j) == needle.charAt(j)) {
+                    if (j < l) {
+                        i++;
+                        j++;
+                    } else {
+                        return i - j;
+                    }
+                }
+                i = i - j + 1;
+                j = 0;
+            }
+            return -1;
+        }
     }
+
+
+
 }

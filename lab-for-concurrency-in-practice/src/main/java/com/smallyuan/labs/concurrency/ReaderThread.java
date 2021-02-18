@@ -39,12 +39,15 @@ public class ReaderThread extends Thread {
                 if (count < 0) {
                     break;
                 } else if (count > 0) {
-
+                    processBuffer(buf,count);
                 }
             }
         } catch (IOException e) {
             // 允许线程退出
         }
         super.run();
+    }
+
+    private void processBuffer(byte[] buf, int count) {
     }
 }

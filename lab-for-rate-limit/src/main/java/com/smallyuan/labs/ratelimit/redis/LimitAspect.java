@@ -32,7 +32,7 @@ public class LimitAspect {
     @Autowired
     private DefaultRedisScript<Number> redisScript;
 
-    @Around("execution(*  com.smallyuan.test.rateLimit.LimitController ..*(..))")
+    @Around("execution(*  com.smallyuan.labs.ratelimit.redis.LimitController ..*(..))")
     public Object test(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();

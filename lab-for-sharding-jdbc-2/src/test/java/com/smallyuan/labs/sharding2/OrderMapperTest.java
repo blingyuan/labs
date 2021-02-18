@@ -6,6 +6,7 @@ import org.apache.shardingsphere.api.hint.HintManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 public class OrderMapperTest {
@@ -35,10 +36,13 @@ public class OrderMapperTest {
     }
 
     @Test
+//    @Transactional
     public void testInsert() {
         OrderDO orderDO = new OrderDO();
         orderDO.setUserId(10);
+        orderDO.setId(21L);
         orderMapper.insert(orderDO);
+        System.out.println(orderMapper.selectById(21));
     }
 
 }

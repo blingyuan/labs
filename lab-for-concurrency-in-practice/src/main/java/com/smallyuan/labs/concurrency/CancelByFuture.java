@@ -31,8 +31,8 @@ public class CancelByFuture {
      * Error 抛出，RuntimeException 返回，
      * 其他未检查异常抛出 IllegalStateException（表示已在非法或不适当的时间调用了方法，即Java环境或
      * Java应用程序的状态不适合请求的操作）
-     * @param t
-     * @return
+     * @param t 未检查的Throwable
+     * @return RuntimeException
      */
     public static RuntimeException launderThrowable(Throwable t) {
         if (t instanceof RuntimeException) {

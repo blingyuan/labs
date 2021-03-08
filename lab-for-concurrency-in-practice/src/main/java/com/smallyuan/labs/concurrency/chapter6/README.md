@@ -280,3 +280,118 @@ public class Renderer {
     }
 }
 ```
+* 为单个任务设置时限 
+`
+Future # V get(long timeout, TimeUnit unit)
+         throws InterruptedException, ExecutionException, TimeoutException;`
+         
+ > 场景：某个Web应用程序从外部的广告服务器上获取广告信息，如果该应用程序在两秒内得不到响应，那么将显示一个默认的广告。
+ ```java
+public class Renderer {
+    
+    private static final long TIME_BUDGET = 2 * 1000 * 1000 * 1000;
+    private final ExecutorService exec = Executors.newFixedThreadPool(20); 
+    
+    Page renderPageWithAd() throws InterruptedException {
+        long endNanos = System.nanoTime() + TIME_BUDGET;
+        Future<Ad> future = exec.submit(new FetchAdTask());
+        Ad ad;
+        try{
+            long waitTime = endNanos - System.nanoTime();
+            ad = future.get(waitTime,TimeUnit.NANOSECONDS);
+        } catch (TimeoutException e) {
+            ad = DEFAULT_AD;
+            future.cancel(true);
+        } catch (ExecutionException e) {
+            ad = DEFAULT_AD;
+        }
+        page.set(ad);
+        reture page;
+    }
+}
+```
+> 场景：一个旅行预定门户网站，用户输入要求，门户网站获取并显示来自多条航线，旅馆或汽车租赁公司的报价。在这个过程中可能会调用Web服务，访问数据库等等，不宜让页面的响应时间受限于最慢的响应时间，而应该显示在指定时间内收到的信息。
+> 从每个公司获取报价的过程相互之间没有影响，可以将获取报价的过程当成一个任务。创建n个任务，提交到一个线程池，保留n个future，使用限时的get方法串行获取每个结果。另一个更简单的方法是 
+* 为一组任务设置时限 
+`ExecutorService # <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks,
+                                                     long timeout, TimeUnit unit)
+                           throws InterruptedException;`
+
+> invokeAll: 将多个任务提交到一个ExecutorService并获取一组Future。invokeAll 按照任务集合中迭代器的顺序将所有的Future添加到返回的集合中，使调用者能将各个Future与Callable关联起来。 当所有任务都执行完毕，或调用线程被中断，或超过指定时限时，invokeAll将返回。当超过指定时限后，任何还未完成的任务都会被取消。当invokeAll返回时，每个任务的执行任务只有正常完成或取消两种，可以通过get或isCancelled来判断         
+```java
+public class TravelWeb {
+    
+    private final ExecutorService exec = Executors.newFixedThreadPool(20); 
+    
+    /**
+    * Quote 报价
+    * 获取报价的任务
+    */
+    private class QuoteTask implements Callable<TravelQuote> {
+        
+        /** 报价公司 */
+        private final TravelCompany travelCompany;
+        /** 用户的要求 */
+        private final TraveInfo travelInfo;
+        
+        /** 构造函数 */
+        QuoteTask(TravelCompany travelCompany,TraveInfo travelInfo) {
+            this.travelCompany = travelCompany;
+            this.travelInfo = travelInfo;
+        }
+        
+        /** 获取报价信息 */
+        public TravelQuote call() throws Exception {
+            return travelCompany.solicitQuote(travelInfo);
+        }
+    }
+    
+    /**
+    * 获取排序后的报价信息
+    * @param travelInfo 用户输入的旅行信息
+    * @param companies 获取报价的公司列表
+    * @param ranking 比较器
+    * @param time 超时时间
+    * @param timeUnit 超时时间单位
+    * @return 报价信息列表
+    */
+    public List<TravelQuote> getRankedTravelQuote(
+            TraveInfo travelInfo,Set<TravelCompany> companies,
+            Comparator<TravelQuote> ranking, long time, TimeUnit timeUnit
+    ) {
+        List<QuoteTask> tasks = new ArrayList<>();
+        for (TravelCompany company : companies) {
+            tasks.add(new QuoteTask(company,travelInfo));
+        }
+        List<Future<TravelQuote>> futures = exec.invokeAll(tasks,time,timeUnit);
+        List<TravelQuote> result = new ArrayList<TravelQuote>(tasks.size());
+        Iterator<QuoteTask> taskIterator = tasks.iterator();
+        for (Future<TravelQuote> f : futures) {
+            QuoteTask task = taskIterator.next();
+            try{
+                result.add(f.get());
+            } catch (ExecutionException e) {
+                result.add(task.getFailureQuote(e.getCause()));
+            } catch (CancellationException e) {
+                result.add(task.getTimeoutQuote(e));
+            }
+        }
+        Collections.sort(result,ranking);
+        return result;
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

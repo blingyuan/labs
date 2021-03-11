@@ -56,17 +56,26 @@ public class RemoveDeadLock {
     
     /** 将资金从A账户，转移到B账户 */
     public void transferMoney(Account fromAccount,Account toAccount,DollarAoumt amount) {
-        synchronized (fromAccount) {
-            synchronized (toAccount) {
-                if (fromAccount.getBalance().compareTo(amount) < 0) {
-                    throw new InsufficientFundsException();
-                } else {
-                    fromAccount.debit(amount);
-                    toAccount.credit(amount);
+        int fromHash = System.identityHashCode(fromAccount);
+        int toHash = System.identityHashCode(toAccount);
+        if (fromHash > toHash) {
+            synchronized (toAccount){
+                synchronized (fromAccount){
+                    // ***
+                }
+            }
+        } else {
+            synchronized (tieLock){
+                synchronized (fromAccount){
+                    synchronized (toAccount){
+                        // ***
+                    }
                 }
             }
         }
+
     }
+   
 }
 ```
  ### 死锁的避免与诊断

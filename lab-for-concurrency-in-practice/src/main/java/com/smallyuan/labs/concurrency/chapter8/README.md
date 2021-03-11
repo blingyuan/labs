@@ -105,11 +105,58 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     protected void terminated() { }
 }
 ```
-
+`com.smallyuan.labs.concurrency.chapter8.TimingThreadPool`
 
 #### 递归算法的并行性
 
+> 如果循环中的迭代操作都是相互独立的，并且每个迭代操作执行的工作量比管理一个新任务时带来的开销更多，那么该串行循环就是个转为并行循环。
 
+```java
+public class SequentiallyToParallel {
+    
+    /** 串行执行 */
+    void processSequentially(List<Element> elements){
+        for (Element e : elements) {
+            process(e);
+        }
+    }
+    /** 并行执行 */
+    void processParallal(List<Element> elements, ExecutorService exec){
+        for (final Element e : elements) {
+            exec.execute(() -> process(e));
+        }
+    }
+}
+```
+> 将串行递归转换为并行递归
+```java
+public class RecursiveS2P {
+    public<T> void sequentialRecursive(List<Node<T>> nodes, Collection<T> results) {
+        for (Node<T> node : nodes) {
+            results.add(node.compute());
+            sequentialRecursive(node.getChildren(),results);
+        }
+    }
+    
+    public<T> void parallelRecursive(final Executor exec,List<Node<T>> nodes,final Collection<T> results) {
+        for (final Node<T> n : nodes) {
+            exec.execute(() -> results.add(n.compute()));
+            parallelRecursive(exec, n.getChildren(),results);
+        }
+    }
+    
+    /** 通过shutdown + awaitTermination , 等待通过并行方法计算的结果 */
+    public<T> Collection<T> getParallelResults(List<Node<T>> nodes){
+        ExecutorService exec = Executors.newCachedThreadPool();
+        Queue<T> resultQueue = new ConcurrentLinkedQueue<T>();
+        parallelRecursive(exec, nodes, resultQueue);
+        exec.shutdown();
+        exec.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+        return resultQueue;
+    }
+}
+
+```
 
 
 
